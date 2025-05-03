@@ -20,7 +20,7 @@ class BasicInstallTest(unittest.TestCase):
         self.browser.get("http://127.0.0.1:8000")  
 
         # В заголовке сайта Макр прочитал  "JapLAN"
-        self.assertIn('JapLAN', self.browser.title)  
+        self.assertIn('JapLAN - Маршруты путешествий', self.browser.title)  
 
 
     def test_home_page_header(self):  
@@ -34,15 +34,31 @@ class BasicInstallTest(unittest.TestCase):
         #self.fail("Finish the test!")  
 
 
+    def test_home_page_blog(self):
+        # А под шапкой расположен блог со статьями
+        self.browser.get("http://127.0.0.1:8000")
+        article_list = self.browser.find_element(By.CLASS_NAME, 'article-list')        
+        self.assertTrue(article_list)
+
+    
+    def test_home_page_articles_look_correct(self):
+        # У каждой статьи есть заголовок и короткое описание
+        self.browser.get("http://127.0.0.1:8000")
+        article_tittle = self.browser.find_element(By.CLASS_NAME, 'article-tittle')            
+        article_summary = self.browser.find_element(By.CLASS_NAME, 'article-summary')
+        self.assertTrue(article_tittle) 
+        self.assertTrue(article_summary)   
+
+
 if __name__ == "__main__":  
     unittest.main()  
 
 
 
 
-# А под шапкой расположен блог со статьями
 
-# У каждой статьи есть заголовок и короткое описание
+
+
 
 # Марк кликнул по заголовку и у него открылась страница с полным текстом статьи
 
