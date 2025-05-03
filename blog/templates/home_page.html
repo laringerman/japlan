@@ -1,0 +1,13 @@
+<html>
+    <title>JapLAN - Маршруты путешествий</title>
+    <h1>JapLAN</h1>
+
+    <div class = "article-list">
+        {% for article in articles %}
+            <div class="article">
+                <h2 class="article-tittle">{{ article.title }}</h2>
+                <p class="article-summary">{{ article.summary }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</html>

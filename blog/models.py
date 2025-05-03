@@ -5,7 +5,7 @@ class Article(models.Model):
     full_text = models.TextField()
     summary = models.CharField(max_length=255)
     category = models.CharField(max_length=255)
-    popdate = models.DateTimeField()
+    pubdate = models.DateTimeField()
     
     # slug = #TODO
     #is_published = models.BooleanField() #TODO

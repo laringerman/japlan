@@ -7,6 +7,36 @@ from datetime import datetime
 
 
 class HomePageTest(TestCase):
+
+    def test_home_page_displays_articles(self):
+        Article.objects.create(
+            title='title 1',
+            summary='summary 1',
+            full_text='full text 1',
+            pubdate=datetime.now()
+            )
+        
+        Article.objects.create(
+            title='title 2',
+            summary='summary 2',
+            full_text='full text 2',
+            pubdate=datetime.now()
+            )
+        
+        request = HttpRequest()  
+        response = home_page(request)  
+        html = response.content.decode("utf8")  
+ 
+        self.assertIn("title 1", html)
+        self.assertIn("summary 1", html)
+        self.assertNotIn("full text 1", html)
+
+        self.assertIn("title 2", html)
+        self.assertIn("summary 2", html)
+        self.assertNotIn("full text 2", html)
+
+
+
     def test_root_url_resolves_to_home_page(self):
         found = resolve('/')
         self.assertEqual(found.func, home_page)
@@ -34,7 +64,7 @@ class ArticleModelTest(TestCase):
             full_text='full text 1',
             summary='summary 1',
             category='category 1',
-            popdate=datetime.now(),
+            pubdate=datetime.now(),
         )
         # сохрани статью 1 в базе
         article_1.save()
@@ -45,7 +75,7 @@ class ArticleModelTest(TestCase):
             full_text='full text 2',
             summary='summary 2',
             category='category 2',
-            popdate=datetime.now(),
+            pubdate=datetime.now(),
         )
         # сохрани статью 2 в базе
         article_2.save()
