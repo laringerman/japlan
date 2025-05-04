@@ -49,6 +49,26 @@ class BasicInstallTest(unittest.TestCase):
         self.assertTrue(article_tittle) 
         self.assertTrue(article_summary)   
 
+    
+    def test_home_page_article_title_link_leads_to_article_page(self):
+        # Марк кликнул по заголовку и у него открылась страница с полным текстом статьи
+
+        # открываем главную страницу
+        self.browser.get("http://127.0.0.1:8000")
+        # находим статью
+        # находим заголовок статьи
+        article_tittle = self.browser.find_element(By.CLASS_NAME, 'article-tittle')
+        # cохраняем заголовок статьи
+        article_tittle_text = article_tittle.text
+        # находим ссылку в заголовке статьи
+        article_link = article_tittle.find_element(By.TAG_NAME, 'a')
+        # переходим по ссылке
+        self.browser.get(article_link.get_attribute('href'))
+        # ожидаем что на открывшейся странице есть нужная статья
+        article_page_tittle = self.browser.find_element(By.CLASS_NAME, 'article-tittle')
+        self.assertEqual(article_tittle_text, article_page_tittle.text)
+
+
 
 if __name__ == "__main__":  
     unittest.main()  
@@ -58,9 +78,8 @@ if __name__ == "__main__":
 
 
 
+# Марк попытался открыть несуществующую статью и ему открылась красивая страница "Станица не найдена"
 
-
-# Марк кликнул по заголовку и у него открылась страница с полным текстом статьи
 
 # Прочитав статью Марк кликнул по тексту "JapLAN" в шапке сайта и попал на главную страницу обратно
 
