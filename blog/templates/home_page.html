@@ -1,15 +1,19 @@
-<html>
-    <title>JapLAN - Маршруты путешествий</title>
+{% extends 'base.html' %}
+
+{% block title %}JapLAN - Маршруты путешествий{% endblock %}
+
+{% block content %}
+    
     <h1>JapLAN</h1>
 
     <div class = "article-list">
         {% for article in articles %}
             <div class="article">
                 <h2 class="article-tittle">
-                    <a href="/blog/{{ article.slug }}">{{ article.title }}</a>
+                    <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
                 </h2>
                 <p class="article-summary">{{ article.summary }}</p>
             </div>
         {% endfor %}
     </div>
-</html>
+{% endblock %}

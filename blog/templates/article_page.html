@@ -1,5 +1,8 @@
-<html>
-    <title>JapLAN - Маршруты путешествий</title>
+{% extends 'base.html' %}
+
+{% block title %}JapLAN - Маршруты путешествий{% endblock %}
+
+{% block content %}
     <h1>JapLAN</h1>
 
             <div class="article">
@@ -7,4 +10,4 @@
                 <p class="article-full_text">{{ article.full_text }}</p>
             </div>
 
-</html>
+{% endblock %}
