@@ -3,17 +3,23 @@
 {% block title %}JapLAN - Маршруты путешествий{% endblock %}
 
 {% block content %}
-    
-    <h1>JapLAN</h1>
-
-    <div class = "article-list">
-        {% for article in articles %}
-            <div class="article">
-                <h2 class="article-tittle">
-                    <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
-                </h2>
-                <p class="article-summary">{{ article.summary }}</p>
+    <div class="container">
+        <div class="row">
+            <h1>JapLAN</h1>
+        </div>
+        <div class="row">
+            <div class="Col-md-8 col-md-4">
+                <div class = "article-list">
+                    {% for article in articles %}
+                        <div class="article">
+                            <h2 class="article-tittle">
+                                <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+                            </h2>
+                            <p class="article-summary">{{ article.summary }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-        {% endfor %}
+        </div>
     </div>
 {% endblock %}

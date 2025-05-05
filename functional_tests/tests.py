@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+#from django.test import LiveServerTestCase
 from blog.models import Article
 from datetime import datetime
 import pytz
@@ -8,9 +9,9 @@ import pytz
 # Жил Марк
 # Марк планирует отпуск в Японию
 # Макр захотел найти какой-нибудь готовый план путешествия, т.к. в новой стране еще не разбирается
-# Марк вбил в гугл "планы путешествия по Японии" и кликнул по одной ихз ссылок
+# Марк вбил в гугл 'планы путешествия по Японии' и кликнул по одной ихз ссылок
 
-class BasicInstallTest(LiveServerTestCase):  
+class BasicInstallTest(StaticLiveServerTestCase):  
     def setUp(self):  
         self.browser = webdriver.Chrome()  
         Article.objects.create(
@@ -37,20 +38,26 @@ class BasicInstallTest(LiveServerTestCase):
         # В браузере открылся сайт (по адрусу...)
         self.browser.get(self.live_server_url)  
 
-        # В заголовке сайта Макр прочитал  "JapLAN"
+        # В заголовке сайта Макр прочитал  'JapLAN'
         self.assertIn('JapLAN - Маршруты путешествий', self.browser.title)  
 
 
     def test_home_page_header(self):  
 
-        # В шапке сайта написано "JapLAN"
+        # В шапке сайта написано 'JapLAN'
         self.browser.get(self.live_server_url)  
-        header = self.browser.find_element(By.TAG_NAME, "h1")
+        header = self.browser.find_element(By.TAG_NAME, 'h1')
 
         self.assertIn('JapLAN', header.text)      
   
-        #self.fail("Finish the test!")  
+        
 
+    def test_layout_and_styling(self):
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024, 768)
+
+        header = self.browser.find_element(By.TAG_NAME, 'h1')
+        self.assertTrue(header.location['x'] > 10)
 
     def test_home_page_blog(self):
         # А под шапкой расположен блог со статьями
@@ -87,15 +94,17 @@ class BasicInstallTest(LiveServerTestCase):
         self.assertEqual(article_tittle_text, article_page_tittle.text)
 
 
+ #self.fail('Finish the test!') 
+
 
 
 # На странице статьи Марк прочитал заголовок страницы с названием статьи
 
 
-# Марк попытался открыть несуществующую статью и ему открылась красивая страница "Станица не найдена"
+# Марк попытался открыть несуществующую статью и ему открылась красивая страница 'Станица не найдена'
 
 
-# Прочитав статью Марк кликнул по тексту "JapLAN" в шапке сайта и попал на главную страницу обратно
+# Прочитав статью Марк кликнул по тексту 'JapLAN' в шапке сайта и попал на главную страницу обратно
 
 
 # Если некоторые статьи есть в адмике и они не опубликованы

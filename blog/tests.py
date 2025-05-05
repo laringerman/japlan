@@ -3,6 +3,7 @@ from django.http import HttpRequest
 from blog.views import home_page, article_page
 from blog.models import Article
 from django.urls import resolve
+from django.urls import reverse
 from datetime import datetime
 import pytz
 
@@ -61,23 +62,10 @@ class HomePageTest(TestCase):
         self.assertNotIn("full text 2", html)
 
 
-
-    def test_root_url_resolves_to_home_page(self):
-        found = resolve('/')
-        self.assertEqual(found.func, home_page)
-
-
-
     def test_home_page_returns_correct_html(self):
-        request = HttpRequest()  
-        response = home_page(request)  
-        html = response.content.decode("utf8")  
-
-
-        self.assertTrue(html.startswith("<html>"))  
-        self.assertIn("<title>JapLAN - Маршруты путешествий</title>", html)  
-        self.assertIn("<h1>JapLAN</h1>", html)  
-        self.assertTrue(html.endswith("</html>")) 
+        url = reverse('home_page')
+        response = self.client.get(url)
+        self.assertTemplateUsed(response, 'home_page.html')
 
 
 class ArticleModelTest(TestCase):
