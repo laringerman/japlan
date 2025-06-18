@@ -1,3 +1,70 @@
-2.article-tittle a {
-    color: #519E8A
+@font-face {
+    font-family: source-sans-3-regular;
+    src: url("../fonts/SourceSans3-Regular.ttf");
+    font-style: normal;
+}
+
+@font-face {
+    font-family: source-sans-3-black;
+    src: url("../fonts/SourceSans3-Black.ttf");
+    font-style: normal;
+}
+
+body {
+    color: #333;
+    font-family: source-sans-3-regular, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.page-header {
+    height: 7em;
+    margin-left: -28px;
+}
+
+h1, h2, h3 {
+    font-family: source-sans-3-black, sans-serif;
+}
+
+h2 {
+    font-size: 1.4em;
+}
+
+h3 {
+    font-size: 1.3em;
+}
+
+h4, h5, h6 {
+    font-size: 1em;
+}
+
+
+h1.logo-top {
+    margin-top: 2em;
+    font-size: 1em;
+}
+
+h1.logo-top img {
+    width: 40px;
+    margin-right: .2em;
+    clip-path: circle(18px at center);
+    margin-top: -3px;
+
+}
+
+.article {
+    margin-bottom: 2em;
+}
+
+h2.article-title {
+    margin-bottom: .1em;
+}
+
+h2.article-title a {
+    text-decoration: none;
+    color: #333;
+}
+
+h2.article-title a:hover {
+    color: #666;
 }
