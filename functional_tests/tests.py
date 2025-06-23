@@ -5,6 +5,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from blog.models import Article
 from datetime import datetime
 import pytz
+import os
 
 # Жил Марк
 # Марк планирует отпуск в Японию
@@ -14,6 +15,9 @@ import pytz
 class BasicInstallTest(StaticLiveServerTestCase):  
     def setUp(self):  
         self.browser = webdriver.Chrome()  
+        staging_server = os.environ.get('STAGING_SERVER')
+        if staging_server:
+            self.live_server_url = 'http://' + staging_server
         Article.objects.create(
             title='title 1',
             summary='summary 1',
@@ -69,9 +73,9 @@ class BasicInstallTest(StaticLiveServerTestCase):
     def test_home_page_articles_look_correct(self):
         # У каждой статьи есть заголовок и короткое описание
         self.browser.get(self.live_server_url)
-        article_tittle = self.browser.find_element(By.CLASS_NAME, 'article-tittle')            
+        article_title = self.browser.find_element(By.CLASS_NAME, 'article-title')            
         article_summary = self.browser.find_element(By.CLASS_NAME, 'article-summary')
-        self.assertTrue(article_tittle) 
+        self.assertTrue(article_title) 
         self.assertTrue(article_summary)   
 
     
@@ -82,16 +86,16 @@ class BasicInstallTest(StaticLiveServerTestCase):
         self.browser.get(self.live_server_url)
         # находим статью
         # находим заголовок статьи
-        article_tittle = self.browser.find_element(By.CLASS_NAME, 'article-tittle')
+        article_title = self.browser.find_element(By.CLASS_NAME, 'article-title')
         # cохраняем заголовок статьи
-        article_tittle_text = article_tittle.text
+        article_title_text = article_title.text
         # находим ссылку в заголовке статьи
-        article_link = article_tittle.find_element(By.TAG_NAME, 'a')
+        article_link = article_title.find_element(By.TAG_NAME, 'a')
         # переходим по ссылке
         self.browser.get(article_link.get_attribute('href'))
         # ожидаем что на открывшейся странице есть нужная статья
-        article_page_tittle = self.browser.find_element(By.CLASS_NAME, 'article-tittle')
-        self.assertEqual(article_tittle_text, article_page_tittle.text)
+        article_page_title = self.browser.find_element(By.CLASS_NAME, 'article-title')
+        self.assertEqual(article_title_text, article_page_title.text)
 
 
  #self.fail('Finish the test!') 
