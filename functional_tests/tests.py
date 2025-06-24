@@ -1,9 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-#from django.test import LiveServerTestCase
+from django.test import LiveServerTestCase, Client
 from blog.models import Article
 from datetime import datetime
+import unittest
 import pytz
 import os
 
@@ -12,28 +12,26 @@ import os
 # Макр захотел найти какой-нибудь готовый план путешествия, т.к. в новой стране еще не разбирается
 # Марк вбил в гугл 'планы путешествия по Японии' и кликнул по одной ихз ссылок
 
-class BasicInstallTest(StaticLiveServerTestCase):  
-    def setUp(self):  
-        self.browser = webdriver.Chrome()  
+class BlogTests(LiveServerTestCase):
+
+    def setUp(self):
+        self.browser = webdriver.Chrome()
         staging_server = os.environ.get('STAGING_SERVER')
         if staging_server:
             self.live_server_url = 'http://' + staging_server
-        Article.objects.create(
-            title='title 1',
-            summary='summary 1',
-            full_text='full text 1',
-            pubdate=datetime.now(pytz.utc),
-            slug='slug-1',
+        else:
+            # Создаём данные только для локального тестового сервера
+            Article.objects.create(
+                title='title 1',
+                summary='summary 1',
+                full_text='full_text 1',
+                pubdate=datetime.utcnow().replace(tzinfo=pytz.utc),
+                slug='slug-1',
+                category='category-1',
+                og_image=File(open('test_images/test_image_1.png', 'rb'))
             )
+        print("STAGING_SERVER:", os.environ.get('STAGING_SERVER'))
         
-        Article.objects.create(
-            title='title 2',
-            summary='summary 2',
-            full_text='full text 2',
-            pubdate=datetime.now(pytz.utc),
-            slug='slug-2',
-            )
-
     def tearDown(self):  
         self.browser.quit()
 
@@ -60,8 +58,8 @@ class BasicInstallTest(StaticLiveServerTestCase):
         self.browser.get(self.live_server_url)
         self.browser.set_window_size(1024, 768)
 
-        header = self.browser.find_element(By.TAG_NAME, 'h1')
-        self.assertTrue(header.location['x'] > 10)
+        footer = self.browser.find_element(By.CLASS_NAME, 'footer')
+        self.assertTrue(footer.location['y'] > 600)
 
     def test_home_page_blog(self):
         # А под шапкой расположен блог со статьями
