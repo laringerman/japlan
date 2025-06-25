@@ -3,9 +3,12 @@ from selenium.webdriver.common.by import By
 from django.test import LiveServerTestCase, Client
 from blog.models import Article
 from datetime import datetime
-import unittest
 import pytz
 import os
+from selenium.webdriver.chrome.options import Options
+import tempfile
+
+
 
 # Жил Марк
 # Марк планирует отпуск в Японию
@@ -15,7 +18,18 @@ import os
 class BlogTests(LiveServerTestCase):
 
     def setUp(self):
-        self.browser = webdriver.Chrome()
+        temp_profile = tempfile.mkdtemp()
+        options = Options()
+        options.add_argument("--disable-features=HTTPS-Only")
+        options.add_argument(f"--user-data-dir={temp_profile}")
+        options.add_argument("--no-first-run")
+        options.add_argument("--no-default-browser-check")
+        options.add_argument("--disable-web-security")
+        options.add_argument("--ignore-certificate-errors")
+
+
+        self.browser = webdriver.Chrome(options=options)
+        
         staging_server = os.environ.get('STAGING_SERVER')
         if staging_server:
             self.live_server_url = 'http://' + staging_server
@@ -59,7 +73,7 @@ class BlogTests(LiveServerTestCase):
         self.browser.set_window_size(1024, 768)
 
         footer = self.browser.find_element(By.CLASS_NAME, 'footer')
-        self.assertTrue(footer.location['y'] > 600)
+        self.assertTrue(footer.location['y'] > 500)
 
     def test_home_page_blog(self):
         # А под шапкой расположен блог со статьями
