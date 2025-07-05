@@ -82,7 +82,28 @@
         line: DJANGO_SECRET_KEY="{{ lookup('password', '/dev/null') }}"
 
 
+    - name: Disable default Nginx site
+      become: yes
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
 
+    - name: Reload systemd
+      become: yes
+      systemd:
+        daemon_reload: yes
+
+    - name: Restart Gunicorn service
+      become: yes
+      systemd:
+        name: gunicorn-{{ host }}.service
+        state: restarted
+
+    - name: Reload Nginx to apply changes
+      become: yes
+      systemd:
+        name: nginx
+        state: reloaded
 
   handlers:
     - name: Restart nginx
