@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}JapLAN - Маршруты путешествий: {{ category }}{% endblock %}
+
+
+{% block page_header %}
+<a href="{% url 'home_page' %}">
+    <img src="{% static 'img/logo.png' %}" />
+    <span class="site-name">JapLAN</span>
+</a>
+{% endblock %}
+
+
+{% block content %}    
+    <div class="row">
+        <div class="col-lg-8 col-md-12">
+            <div class="article-list">
+                <h1>Категория: {{ category }}</h1>
+                {% for article in articles %}
+                    <div class="article">
+                        <h2 class="article-title">
+                            <a href="{{ article.get_absolute_url }}">{{ article.title | safe }}</a>
+                        </h1>
+                        <div class="article-text">{{ article.summary | safe }}</div>
+                        
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}  

@@ -17,11 +17,21 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from blog import views
+from blog.views import home_page, article_page, category_page
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('', views.home_page, name='home_page'),
-    path('blog/<slug:slug>', views.article_page, name='article_page'),
+    path('', home_page, name='home_page'),
+    path('blog/<slug:slug>', article_page, name='article_page'),
+    path('blog/category/<slug:category>/', 
+         category_page,
+         name='category_page'),
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

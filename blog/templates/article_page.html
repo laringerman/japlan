@@ -2,12 +2,46 @@
 {% load static %}
 {% block title %}JapLAN - Маршруты путешествий{% endblock %}
 
+{% block opengraph %}
+<meta property="og:title" content="{{ article.title | safe }}" />
+<meta property="og:image" content="https://{{ request.get_host }}{{ article.og_image.url}}" />
+<meta property="og:image:width" content="{{ article.og_image.width}}" />
+<meta property="og:image:height" content="{{ article.og_image.height}}" />
+<meta property="og:type" content="blog" />
+<meta property="og:url" content="{{ request.build_absolute_uri }}" />
+<meta property="og:author" content="German Larin" />
+{% endblock %}
+
+{% block page_header %}
+<a href="{% url 'home_page' %}">
+    <img src="{% static 'img/logo.png' %}" />
+    <span class="site-name">JapLAN</span>
+</a>
+{% endblock %}
+
+
+
+
 {% block content %}
     <div class="row">
         <div class="col-md-8 col-lg-8">
             <div class="article">
                 <h1 class="article-title">{{ article.title }}</h1>
                 <div class="article-full_text">{{ article.full_text | safe}}</div>
+                <div class="likely-wrapper">
+                    <div class="likely">
+                        <div class="twitter">Tweet</div>
+                        <div class="facebook">Share</div>
+                        <div class="vkontakte">Share</div>
+                        <div class="telegram">Send</div>
+                        <div class="whatsapp">Send</div>
+                        <div class="linkedin">Link</div>
+                    </div>
+                </div>
+
+                <div class="article-footer">
+                    🥷Это категория: <a href="{{ article.get_category_url }}">{{ article.category }}</a>
+                </div>
             </div>
         </div>
     </div>

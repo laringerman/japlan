@@ -4,17 +4,22 @@
         <title>{% block title %}{% endblock %}</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
         <link href="{% static 'blog/styles.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'blog/likely.css' %}" rel="stylesheet">
+        <script src="{% static 'blog/likely.js' %}"></script>
+        {% block opengraph %}{% endblock %}
     </head>
 
     <body>
         <div class="container">
             <div class="row page-header">
                 <div class="col">
-                    <h1 class="logo-top">
+                    <div class="logo-top">
+                        {% block page_header %}
                         <img src="{% static 'img/logo.png' %}"/>
                         <span class="site-name">JapLAN</span>
+                         {% endblock %}
 
-                    </h1>
+                    </div>
                 </div>
             </div>
             {% block content %}

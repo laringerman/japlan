@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from django.test import LiveServerTestCase, Client
+from django.core.files import File
 from blog.models import Article
 from datetime import datetime
 import pytz
@@ -42,7 +43,17 @@ class BlogTests(LiveServerTestCase):
                 pubdate=datetime.utcnow().replace(tzinfo=pytz.utc),
                 slug='slug-1',
                 category='category-1',
-                og_image=File(open('test_images/test_image_1.png', 'rb'))
+                og_image=File(open('gallery/test_images/test_image_1.png', 'rb'))
+            )
+
+            Article.objects.create(
+                title='title 2',
+                summary='summary 2',
+                full_text='full_text 2',
+                pubdate=datetime.utcnow().replace(tzinfo=pytz.utc),
+                slug='slug-2',
+                category='category-1',
+                og_image=File(open('gallery/test_images/test_image_2.png', 'rb'))
             )
         print("STAGING_SERVER:", os.environ.get('STAGING_SERVER'))
         
@@ -62,7 +73,7 @@ class BlogTests(LiveServerTestCase):
 
         # В шапке сайта написано 'JapLAN'
         self.browser.get(self.live_server_url)  
-        header = self.browser.find_element(By.TAG_NAME, 'h1')
+        header = self.browser.find_element(By.CLASS_NAME, 'logo-top')
 
         self.assertIn('JapLAN', header.text)      
   
@@ -109,6 +120,28 @@ class BlogTests(LiveServerTestCase):
         article_page_title = self.browser.find_element(By.CLASS_NAME, 'article-title')
         self.assertEqual(article_title_text, article_page_title.text)
 
+    def test_article_page_header_has_link_that_leads_to_home(self):
+        # На странице статьи Вася кликнул по заголовку в шапке сайта
+        # и попал на главную страницу
+        self.browser.get(self.live_server_url)
+        initial_url = self.browser.current_url
+        article = self.browser.find_element(
+            By.CLASS_NAME,
+            'article')
+        article_title = article.find_element(
+            By.CLASS_NAME,
+            'article-title')
+        article_link = article_title.find_element(By.TAG_NAME, 'a')
+        href = article_link.get_attribute('href')
+        self.browser.get(href)
+        page_header = self.browser.find_element(
+            By.CLASS_NAME,
+            'logo-top')
+        href_back = page_header.find_element(
+            By.TAG_NAME, 'a').get_attribute('href')
+        self.browser.get(href_back)
+        final_url = self.browser.current_url
+        self.assertEqual(initial_url, final_url)
 
  #self.fail('Finish the test!') 
 
