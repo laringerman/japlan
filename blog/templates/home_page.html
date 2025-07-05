@@ -9,10 +9,10 @@
             <div class = "article-list">
                 {% for article in articles %}
                     <div class="article">
-                        <h2 class="article-title">
+                        <h1 class="article-title">
                             <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
-                        </h2>
-                        <p class="article-summary">{{ article.summary }}</p>
+                        </h1>
+                        <div class="article-summary">{{ article.summary }}</div>
                     </div>
                 {% endfor %}
             </div>

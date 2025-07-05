@@ -73,16 +73,16 @@ h1.logo-top img {
     margin-bottom: 2em;
 }
 
-h2.article-title {
-    margin-bottom: .1em;
+h1.article-title {
+    margin-bottom: .5em;
 }
 
-h2.article-title a {
+h1.article-title a {
     text-decoration: none;
     color: #333;
 }
 
-h2.article-title a:hover {
+h1.article-title a:hover {
     color: #666;
 }
 

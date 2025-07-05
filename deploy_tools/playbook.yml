@@ -1,0 +1,98 @@
+---
+
+- hosts: all
+  vars:
+    host: "{{ inventory_hostname }}"
+    ansible_user: "gl"
+
+  tasks:
+  #1. Устанавливаем python 3.12 + python 3.12 venv, git, nginx, gunicorn
+    - name: Deadsnakes PPA to get Python 3.12
+      apt_repository:
+        repo='ppa:deadsnakes/ppa'
+
+    - name: Make sure required packages are installed
+      apt: 
+        pkg=nginx,git,python3.12,python3.12-venv 
+        state=present
+
+  #2. Скачиваем код с гитхаба 
+    - name: Download github repo
+      ansible.builtin.git:
+        repo: https://github.com/laringerman/japlan.git
+        dest: /home/{{ ansible_user }}/sites/{{ host }}
+
+  #3. Создаем виртуальное окружение и устанавливаем зависимости
+    - name: Install dependencies
+      pip:
+        requirements: /home/{{ ansible_user }}/sites/{{ host }}/requirements.txt
+        virtualenv: /home/{{ ansible_user }}/sites/{{ host }}/venv
+        virtualenv_command: /usr/bin/python3.12 -m venv
+
+  #4. Прогоняем миграции (бд)
+    - name: Run migrations
+      community.general.django_manage:
+        command: migrate
+        project_path: "/home/{{ ansible_user }}/sites/{{ host }}"
+        virtualenv: "/home/{{ ansible_user }}/sites/{{ host }}/venv"
+
+  #5. Создаем конфигурации в sites available (для nginx)
+    - name: Add nginx config to sites-available
+      template: 
+        src=./sites-available.j2
+        dest=/etc/nginx/sites-available/{{ host}}
+      notify:
+        - Restart nginx
+
+
+  #6. Подключить конфигурацию в sites-enabled --> перезапустить Nginx
+    - name: Add symlink in nginx sites-enabled
+      file:
+        src=/etc/nginx/sites-available/{{ host }}
+        dest=/etc/nginx/sites-enabled/{{ host }}
+        state=link
+      notify:
+        - Restart nginx
+
+  #7. Настраиваем gunicorn --> reload gunicorn
+    - name: Write gunicorn service script
+      template: 
+        src=./gunicor.j2
+        dest=/etc/systemd/system/gunicorn-{{ host }}.service
+      notify:
+        - Restart gunicorn
+
+  #8. Собираем Static файлы
+    - name: Collect static files
+      community.general.django_manage:
+        command: collectstatic --noinput
+        project_path: "/home/{{ ansible_user }}/sites/{{ host }}"
+        virtualenv: "/home/{{ ansible_user }}/sites/{{ host }}/venv"
+
+  #9. Создаем файл .env 
+    - name: Create .env
+      template: 
+        src=./dotenv.j2
+        dest=/home/{{ ansible_user }}/sites/{{ host }}/.env
+
+  #10. Генерируем и сохраняем в .env SECRET_KEY
+    - name: Create django secret key and save to .env
+      ansible.builtin.lineinfile:
+        path: /home/{{ ansible_user }}/sites/{{ host }}/.env
+        line: DJANGO_SECRET_KEY="{{ lookup('password', '/dev/null') }}"
+
+
+
+
+  handlers:
+    - name: Restart nginx
+      service: name=nginx state=restarted
+
+    - name: Restart gunicorn
+      systemd:
+        name: gunicorn-{{ host }}
+        daemon_reload: yes
+        enabled: yes
+        state: restarted
+
+

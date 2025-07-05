@@ -1,0 +1,22 @@
+0. Создать сервер + настроить ssh + подключить домен
+---
+
+1. Устанавливаем python 3.12 + python 3.12 venv, git, nginx, gunicorn
+2. Скачиваем код с гитхаба 
+3. Создаем виртуальное окружение и устанавливаем зависимости
+4. Прогоняем миграции (бд)
+5. Создаем конфигурации в sites available (для nginx)
+6. Подключить конфигурацию в sites-enabled --> перезапустить Nginx
+7. Настраиваем gunicorn --> reload gunicorn
+8. Собираем Static файлы
+9. Создаем файл .env 
+
+DJANGO_DEBUG_FALSE=y
+DEBUG = False
+ALLOWED_HOSTS = ['{SITENAME}']
+
+10. Генерируем и сохраняем в .env SECRET_KEY
+
+---
+11. запускаем Nginx
+12. Запускаем gunicorn
