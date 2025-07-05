@@ -3,7 +3,7 @@ from .models import Article
 #from django.http import HttpResponse
 
 def home_page(request):
-    articles = Article.objects.all()
+    articles = Article.objects.all().order_by('-pubdate')  # сортировка по убыванию даты
     context = {'articles': articles}
     return render(request, 'home_page.html', context)
 
