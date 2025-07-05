@@ -16,11 +16,13 @@
         pkg=nginx,git,python3.12,python3.12-venv 
         state=present
 
-  #2. Скачиваем код с гитхаба 
+  #2. Скачиваем код с гитхаба (ИСПРАВЛЕНО - добавлен force)
     - name: Download github repo
       ansible.builtin.git:
         repo: https://github.com/laringerman/japlan.git
         dest: /home/{{ ansible_user }}/sites/{{ host }}
+        force: yes
+        version: main
 
   #3. Создаем виртуальное окружение и устанавливаем зависимости
     - name: Install dependencies
@@ -44,7 +46,6 @@
       notify:
         - Restart nginx
 
-
   #6. Подключить конфигурацию в sites-enabled --> перезапустить Nginx
     - name: Add symlink in nginx sites-enabled
       file:
@@ -62,10 +63,10 @@
       notify:
         - Restart gunicorn
 
-  #8. Собираем Static файлы
+  #8. Собираем Static файлы (ИСПРАВЛЕНО - добавлен --clear)
     - name: Collect static files
       community.general.django_manage:
-        command: collectstatic --noinput
+        command: collectstatic --noinput --clear
         project_path: "/home/{{ ansible_user }}/sites/{{ host }}"
         virtualenv: "/home/{{ ansible_user }}/sites/{{ host }}/venv"
 
@@ -80,7 +81,6 @@
       ansible.builtin.lineinfile:
         path: /home/{{ ansible_user }}/sites/{{ host }}/.env
         line: DJANGO_SECRET_KEY="{{ lookup('password', '/dev/null') }}"
-
 
     - name: Disable default Nginx site
       become: yes
@@ -99,6 +99,15 @@
         name: gunicorn-{{ host }}.service
         state: restarted
 
+    # ДОБАВЛЕНО - очистка кеша nginx
+    - name: Clear nginx cache
+      become: yes
+      shell: |
+        if [ -d /var/cache/nginx ]; then
+          rm -rf /var/cache/nginx/*
+        fi
+      ignore_errors: yes
+
     - name: Reload Nginx to apply changes
       become: yes
       systemd:
@@ -115,5 +124,3 @@
         daemon_reload: yes
         enabled: yes
         state: restarted
-
-

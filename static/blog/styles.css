@@ -56,33 +56,42 @@ h4, h5, h6 {
 }
 
 
-h1.logo-top {
+.logo-top {
     margin-top: 2em;
     font-size: 1em;
+    font-family: source-sans-3-black, sans-serif;
 }
 
-h1.logo-top img {
+.logo-top  a {
+  text-decoration: none;
+  color: #333
+}
+
+.logo-top img {
     width: 40px;
     margin-right: .2em;
     clip-path: circle(18px at center);
     margin-top: -3px;
 
 }
+.article-image {
+    width: 560px;
+}
 
 .article {
     margin-bottom: 2em;
 }
 
-h2.article-title {
-    margin-bottom: .1em;
+h1.article-title {
+    margin-bottom: .5em;
 }
 
-h2.article-title a {
+h1.article-title a {
     text-decoration: none;
     color: #333;
 }
 
-h2.article-title a:hover {
+h1.article-title a:hover {
     color: #666;
 }
 
@@ -132,4 +141,11 @@ th {
     table {
         width: 100%;
     }
+}
+
+
+.likely-wrapper {
+    margin-top: 1em;
+    padding-bottom: 1em;
+    display: block;
 }
