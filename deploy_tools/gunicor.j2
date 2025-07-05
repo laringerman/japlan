@@ -1,8 +1,9 @@
 [Unit]
 Description=Gunicorn server for {{ host }}
+After=network.target
 
 [Service]
-Restart=on-failure
+Restart=always
 User=root
 WorkingDirectory=/home/{{ ansible_user }}/sites/{{ host }}
 EnvironmentFile=/home/{{ ansible_user }}/sites/{{ host }}/.env
