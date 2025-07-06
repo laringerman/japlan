@@ -6,6 +6,7 @@ from django.urls import resolve
 from django.urls import reverse
 from datetime import datetime
 import pytz
+from django.core.files import File 
 
 class ArticlePageeEst(TestCase):
     def test_article_page_displays_correct_article(self):
@@ -15,13 +16,23 @@ class ArticlePageeEst(TestCase):
             full_text='full text 1',
             pubdate=datetime.now(pytz.utc),
             slug='slug-1',
+            category='category-1',
+            og_image = File(open('gallery/test_images/test_image_2.png', 'rb'))
+            )
+        Article.objects.create(
+            title='title 2',
+            summary='summary 2',
+            full_text='full text 2',
+            pubdate=datetime.now(pytz.utc),
+            category='category-2',
+            slug='slug-2',
+            og_image = File(open('gallery/test_images/test_image_2.png', 'rb'))
             )
         
-        
-        request = HttpRequest()  
-        response = article_page(request, 'slug-1')  
-        html = response.content.decode("utf8")  
- 
+        url = reverse('article_page', kwargs={'slug': 'slug-1'})
+        response = self.client.get(url)
+        html = response.content.decode('utf8')
+
         self.assertIn("title 1", html)
         self.assertIn("full text 1", html)
         self.assertNotIn("summary 1", html)
