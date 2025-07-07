@@ -70,7 +70,6 @@ h4, h5, h6 {
 .logo-top img {
     width: 40px;
     margin-right: .2em;
-    clip-path: circle(18px at center);
     margin-top: -3px;
 
 }
